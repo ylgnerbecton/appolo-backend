@@ -1,7 +1,7 @@
-APLICAÇÃO PARA UNIFICAR CARTÕES
+APLICAÇÃO PARA 
 =========
 
-Bem-vindo ao projeto UNIFICAR CARTÕES.
+Bem-vindo ao projeto Appolo.
 
 ### INFO ###
 
