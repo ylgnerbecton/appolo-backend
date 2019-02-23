@@ -15,7 +15,7 @@ Instalação
 instalação rápida:
 
     git clone https://github.com/ylgnerbecton/appolo-backend.git
-    cd ApenasUm_Backend
+    cd appolo-backend
     python3 -m venv .env
     source .env/bin/activate
     pip3 install -r requirements.txt
