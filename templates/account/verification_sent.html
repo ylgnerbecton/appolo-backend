@@ -1,0 +1,32 @@
+{% extends 'account/base.html' %}
+
+{% block content %}
+    <div class="signup-box">
+        <div class="logo">
+            <h3 align="center">Construnote</h3>
+        <!-- <img width="250" src="/static/custom/img/logo.png" alt=""> -->
+        </div>
+        
+        <div class="card">
+            <div class="body">
+                <div class="msg">Cadastro concluido</div>
+
+                <div class="input-group">
+                    Obrigado por se tornar um doador. Em alguns instantes você receberá em seu email um link para confirmação
+                    de sua conta, mas você já pode começar a fazer suas cotações através de nosso site.
+                </div>
+
+                <div class="alert alert-warning fade in alert-dismissible" style="margin-top:18px;text-align:center;">
+                    <strong>Atenção! Clique no link em seu email para confirmação de sua conta.</strong>
+                </div>
+
+                <div class="m-t-25 m-b--5 align-center">
+                    <a class="waves-effect" style="color:#00bcd4;"  href="{% url 'dashboard' %}">Confirmar</a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascript %}
+{% endblock %}

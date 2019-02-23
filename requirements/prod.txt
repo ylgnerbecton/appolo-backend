@@ -1,0 +1,9 @@
+-r base.txt
+
+# WSGI Handler
+# ------------------------------------------------
+cffi==1.11.5
+gevent==1.3.4
+greenlet==0.4.13
+pycparser==2.18
+gunicorn==19.8.1

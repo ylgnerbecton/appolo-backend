@@ -1,0 +1,198 @@
+{% extends 'account/base.html' %}
+
+{% block content %}
+<div class="signup-box">
+    <div class="logo">
+        <h3 align="center">Construnote</h3>
+        <!-- <img width="250" src="/static/custom/img/logo.png" alt=""> -->
+    </div>
+    
+    <div class="card">
+        <div class="body">
+            <form id="sms-form" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="msg">Confirmação de contato</div>
+                <div class="alert alert-warning fade in alert-dismissible" style="margin-top:18px;text-align:center;">
+                    <strong>Atenção!</strong>
+                    Enviamos um SMS com o código de sua conta para:<br/> 
+                    <strong id="phone_number">{{donor.phone}}.</strong>
+                </div>
+                
+                <div class="input-group">
+                    <span class="input-group-addon">
+                        <i class="material-icons">textsms</i>
+                    </span>
+                    <div class="form-line">
+                        {{form.sms_code}}
+                    </div>
+                </div>
+
+                <div id="response_area"></div>
+
+                <p id="sms_countdown" style="color:red;"></p>
+
+                <button id="buttom_send-sms" class="btn btn-block btn-lg bg-blue waves-effect" type="buttom" disabled="true">Re-enviar</button>
+                <hr/>
+                <button class="btn btn-block btn-lg bg-pink waves-effect" type="submit">Confirmar</button>
+                <button type="button" class="btn btn-block btn-lg bg-red waves-effect" data-toggle="modal" data-target="#phone_modal">Alterar Telefone</button>
+
+                <div class="m-t-25 m-b--5 align-center">
+                    <a style="color:#00bcd4;"  href="{% url 'dashboard' %}">Você já é um cliente?</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% include 'includes/modal_change_phone.html' %}
+
+{% endblock %}
+
+{% block javascript %}
+<!-- Moment -->
+<script src="/static/dashboard/theme/plugins/momentjs/moment.js"></script>
+<!-- Input Mask Plugin Js -->
+<script src="/static/dashboard/theme/plugins/jquery-inputmask/jquery.inputmask.bundle.js"></script>
+<script>
+    // MASKS
+    $(".masked-phone").inputmask({mask: ["(99) 9999-9999", "(99) 99999-9999"], keepStatic: true});
+    $('.masked-sms').inputmask('9999', { placeholder: '____' });
+
+    // MODALS
+    $(function () {
+        $('.js-modal-buttons .btn').on('click', function () {
+            var color = $(this).data('color');
+            $('#mdModal .modal-content').removeAttr('class').addClass('modal-content modal-col-' + color);
+            $('#mdModal').modal('show');
+        });
+    });
+
+    // SMS COUNTDOWN
+    var sms_data = moment('{{donor.sms_date|date:"d-m-Y H:m:s"}}', "DD-MM-YYYY H:m").valueOf();
+    var countdown = setInterval(function() {
+        var time_now = new Date().getTime();        
+        var distance = sms_data - time_now;
+
+        /* Calculating time countdown */
+        var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+        if(minutes<= 0 && seconds <=0){
+            $("#buttom_send-sms").attr('disabled', false);
+            $("#sms_countdown").html('');
+        }else{
+            var html = "Liberação de reenvio em " + String(minutes) + ' minutos e ' + String(seconds) + ' segundos.';
+            $("#buttom_send-sms").attr('disabled', true);
+            $("#sms_countdown").html(html);
+        }
+
+    }, 1000);
+
+    // RESEND SMS
+    $("#buttom_send-sms").on('click', function(event){
+        var formData = new FormData();
+        formData.append("pk", '{{client.pk}}');
+        $.ajax({
+            url: '{% url "account_resend_sms" client.pk %}',
+            type: 'GET',
+            data: formData,
+            async: false,
+            cache: false,
+            contentType: false,
+            enctype: 'multipart/form-data',
+            processData: false,
+            success: function (response) {
+                console.log(response);
+                html = '<div class="alert alert-success fade in alert-dismissible" style="margin-top:18px;text-align:center;">'
+                html +=     '<a href="#" class="close" data-dismiss="alert" aria-label="close" title="close">×</a>'
+                html +=     '<strong>Atenção!</strong> ' + response.message;
+                html += '</div>'
+                $("#response_area").html(html);
+                sms_data = moment(response.countdown).valueOf();
+            },
+            error: function(response) {
+                console.log(response);
+                html = '<div class="alert alert-danger fade in alert-dismissible" style="margin-top:18px;text-align:center;">'
+                html +=     '<a href="#" class="close" data-dismiss="alert" aria-label="close" title="close">×</a>'
+                html +=     '<strong>Atenção!</strong> ' +  response.responseJSON.message;
+                html += '</div>'
+                $("#response_area").html(html);
+            }
+        });
+    });
+
+    // SUBMIT SMS CODE
+    $('#sms-form').submit(function(event) {
+        event.preventDefault();
+        var html = "";
+        var formData = new FormData();
+
+        formData.append("sms_code", $("#{{form.sms_code.auto_id}}").val());
+        formData.append("csrfmiddlewaretoken", document.getElementsByName('csrfmiddlewaretoken')[0].value);
+
+        $.ajax({
+            url: '',
+            type: 'POST',
+            data: formData,
+            async: false,
+            cache: false,
+            contentType: false,
+            enctype: 'multipart/form-data',
+            processData: false,
+            success: function (response) {
+                console.log(response);
+                html = '<div class="alert alert-success fade in alert-dismissible" style="margin-top:18px;text-align:center;">'
+                html +=     '<a href="#" class="close" data-dismiss="alert" aria-label="close" title="close">×</a>'
+                html +=     '<strong>Atenção!</strong> ' + response.message;
+                html += '</div>'
+                $("#response_area").html(html);
+
+                window.location.href = response.redirect;
+            },
+            error: function(response) {
+                console.log(response);
+                html = '<div class="alert alert-danger fade in alert-dismissible" style="margin-top:18px;text-align:center;">'
+                html +=     '<a href="#" class="close" data-dismiss="alert" aria-label="close" title="close">×</a>'
+                html +=     '<strong>Atenção!</strong> ' +  response.responseJSON.message;
+                html += '</div>'
+                $("#response_area").html(html);
+            }
+        });
+    });
+
+    // CHANGE PHONE
+    $('#phone-form').submit(function(event) {
+        event.preventDefault();
+        var html = "";
+        var phone_number = $("#{{form_modal.phone.auto_id}}").val();
+        var formData = {'phone':phone_number}
+
+        $.ajax({
+            url: "{% url 'account_change_phone' client.pk %}",
+            type: 'GET',
+            data: formData,
+            success: function (response) {
+                console.log(response);
+                html = '<div class="alert alert-success fade in alert-dismissible" style="margin-top:18px;text-align:center;">'
+                html +=     '<a href="#" class="close" data-dismiss="alert" aria-label="close" title="close">×</a>'
+                html +=     '<strong>Atenção!</strong> ' + response.message;
+                html += '</div>'
+                $("#response_area").html(html);
+                $("#phone_number").html(phone_number);
+                $('#phone_modal').modal('toggle');
+                $("#{{form_modal.phone.auto_id}}").val('');
+                sms_data = moment(response.countdown).valueOf();
+            },
+            error: function(response) {
+                console.log(response);
+                html = '<div class="alert alert-danger fade in alert-dismissible" style="margin-top:18px;text-align:center;">'
+                html +=     '<a href="#" class="close" data-dismiss="alert" aria-label="close" title="close">×</a>'
+                html +=     '<strong>Atenção!</strong> ' +  response.responseJSON.message;
+                html += '</div>'
+                $("#response_area").html(html);
+                $('#phone_modal').modal('toggle');
+            }
+        });
+    });
+</script>
+{% endblock %}

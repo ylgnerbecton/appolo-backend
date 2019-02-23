@@ -1,0 +1,19 @@
+<div class="modal fade" id="phone_modal" tabindex="-1" role="dialog" style="display: none;">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+            <form id="phone-form" method="POST" enctype="multipart/form-data" action="">
+                {% csrf_token %}
+                <div class="modal-header">
+                    <h4 class="modal-title" id="smallModalLabel">Alterar Celular</h4>
+                </div>
+                <div class="modal-body">
+                    {{form_modal.phone}}
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-link waves-effect">Salvar</button>
+                    <button type="button" class="btn btn-link waves-effect" data-dismiss="modal">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

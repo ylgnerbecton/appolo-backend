@@ -1,0 +1,36 @@
+
+{% extends 'account/base.html' %} 
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-5">
+        <div class="card">
+
+            <!-- Logo -->
+            <div class="card-header pt-4 pb-4 text-center bg-primary">
+            </div>
+
+            <div class="card-body p-4">
+                
+                <div class="text-center w-75 m-auto">
+                    <h4 class="text-dark-50 text-center mt-0 font-weight-bold">Sair</h4>
+                    <p class="text-muted mb-4">Você tem certeza que deseja sair ?</p>
+                </div>
+
+                <form id="sign_out" method="POST" action="{% url 'account_logout' %}">{% csrf_token %}
+
+                    <div class="form-group mb-0 text-center">
+                        <a class="btn btn-secondary btn-xl" href="{% url 'dashboard' %}">Voltar</a>
+                        <button class="btn btn-primary" type="submit"> Sair </button>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock %}
+
+{% block javascript %}
+{% endblock %}

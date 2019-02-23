@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Appolo - Dashboard</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta content="A fully featured admin theme which can be used to build CRM, CMS, etc." name="description">
+        <meta content="Coderthemes" name="author">
+        <!-- App favicon -->
+        <link rel="shortcut icon" href="/static/dashboard/assets/images/favicon.ico">
+
+        <!-- App css -->
+        <link href="/static/dashboard/assets/css/icons.min.css" rel="stylesheet" type="text/css">
+        <link href="/static/dashboard/assets/css/app.min.css" rel="stylesheet" type="text/css">
+        {% block css %}{% endblock %}
+    </head>
+
+    <body class="authentication-bg">
+        <div class="account-pages mt-5 mb-5">
+            <div class="container">
+                {% block content %} {% endblock %}
+            </div>
+        </div>
+
+        <footer class="footer footer-alt">
+            2018 © Hyper - Coderthemes.com
+        </footer>
+            
+        <script src="/static/dashboard/assets/js/app.min.js"></script>
+        {% block javascript %}{% endblock %}
+        
+    </body>
+</html>

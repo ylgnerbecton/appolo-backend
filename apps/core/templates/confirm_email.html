@@ -1,0 +1,30 @@
+{% extends 'account/base.html' %}
+
+{% block content %}
+<div class="signup-box">
+    <div class="logo">
+        <h3 align="center">Construnote</h3>
+        <!-- <img width="250" src="/static/custom/img/logo.png" alt=""> -->
+    </div>
+    
+    <div class="card">
+        <div class="body">
+            {% if self.activated %}
+            <div class="msg">Email confirmado</div>
+
+            <div class="input-group">
+                Obrigado! Você completou todos os passos para confirmação de sua conta.
+            </div>
+            {% endif %}
+
+            <div class="m-t-25 m-b--5 align-center">
+                <a style="color:#00bcd4;"  href="{% url 'dashboard' %}">Confirmar</a>
+            </div>
+            {%}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block javascript %}
+{% endblock %}

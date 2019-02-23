@@ -1,0 +1,149 @@
+{% extends 'account/base.html' %} 
+
+{% block content %}
+
+<div class="card card-border-color card-border-color-primary">
+    <div class="card-header">
+        <img src="/static/custom/img/logomarca.png" alt="logo" width="130" height="90" class="logo-img">
+        <span class="splash-description">Falta pouco para terminar seu cadastro.</span>
+    </div>
+    <div class="card-body">
+        <form id="signup-form" method="POST" enctype="multipart/form-data">{% csrf_token %}
+            <div class="signup-form">
+
+                {{form.latitude}} {{form.longitude}} {{form.cod_ibge}}
+
+                <div class="form-group">
+                    {{form.zip_code}}
+                </div>
+
+                <div class="form-group">
+                    {{form.street}}
+                </div>
+
+                <div class="form-group">
+                    {{form.number}}
+                </div>
+
+                <div class="form-group">
+                    {{form.city}}
+                </div>
+
+                <div class="form-group">
+                    {{form.neighborhood}}
+                </div>
+
+                <div class="form-group">
+                    {{form.state}}
+                </div>
+
+                <button class="btn btn-block btn-primary btn-xl" type="submit">Concluir</button>
+
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %} {% block javascript %}
+<!-- Input Mask Plugin Js -->
+<script src="/static/dashboard/theme/plugins/jquery-inputmask/jquery.inputmask.bundle.js"></script>
+<script>
+    $(".masked-zipcode").inputmask('99.999-999', { placeholder: '_.__-__' });
+
+    $("#{{form.zip_code.auto_id}}").focusout(function (event) {
+        var cep = String($(this).val()).replace(/\D/g, '');
+
+        $.ajax({
+            url: '{% url "service-cep" %}',
+            type: 'GET',
+            data: { cep: cep },
+            success: function (response) {
+                console.log(response);
+                $("#{{form.street.auto_id}}").val(response.logradouro);
+                $("#{{form.state.auto_id}}").val(response.estado);
+                $("#{{form.city.auto_id}}").val(response.cidade);
+                $("#{{form.neighborhood.auto_id}}").val(response.bairro);
+                $("#{{form.latitude.auto_id}}").val(response.latitude);
+                $("#{{form.longitude.auto_id}}").val(response.longitude);
+                $("#{{form.cod_ibge.auto_id}}").val(response.ibge);
+            },
+            error: function (response) {
+                console.log(response);
+            }
+        });
+    });
+
+    $('#extra-form').submit(function (event) {
+        event.preventDefault();
+        var html = "";
+        var formData = new FormData();
+
+        formData.append("street", $("#{{form.street.auto_id}}").val());
+        formData.append("state", $("#{{form.state.auto_id}}").val());
+        formData.append("number", $("#{{form.number.auto_id}}").val());
+        formData.append("city", $("#{{form.city.auto_id}}").val());
+        formData.append("neighborhood", $("#{{form.neighborhood.auto_id}}").val());
+        formData.append("zip_code", $("#{{form.zip_code.auto_id}}").val());
+        formData.append("latitude", $("#{{form.latitude.auto_id}}").val());
+        formData.append("longitude", $("#{{form.longitude.auto_id}}").val());
+        formData.append("cod_ibge", $("#{{form.cod_ibge.auto_id}}").val());
+        formData.append("csrfmiddlewaretoken", document.getElementsByName('csrfmiddlewaretoken')[0].value);
+
+        $.ajax({
+            url: '',
+            type: 'POST',
+            data: formData,
+            async: false,
+            cache: false,
+            contentType: false,
+            enctype: 'multipart/form-data',
+            processData: false,
+            success: function (response) {
+                console.log(response);
+                html = '<div class="alert alert-success fade in alert-dismissible" style="margin-top:18px;text-align:center;">'
+                html += '<a href="#" class="close" data-dismiss="alert" aria-label="close" title="close">×</a>'
+                html += '<strong>Atenção!</strong> ' + response.message;
+                html += '</div>'
+                $("#response_area").html(html);
+
+                window.location.href = response.redirect;
+            },
+            error: function (response) {
+                console.log(response);
+                html = '<div class="alert alert-danger fade in alert-dismissible" style="margin-top:18px;text-align:center;">'
+                html += '<a href="#" class="close" data-dismiss="alert" aria-label="close" title="close">×</a>'
+                html += '<strong>Atenção!</strong> ' + response.responseJSON.message;
+                html += '</div>'
+                $("#response_area").html(html);
+            }
+        });
+    });
+
+    // using jQuery
+    function getCookie(name) {
+        var cookieValue = null;
+        if (document.cookie && document.cookie != '') {
+            var cookies = document.cookie.split(';');
+            for (var i = 0; i < cookies.length; i++) {
+                var cookie = jQuery.trim(cookies[i]);
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+    var csrftoken = getCookie('csrftoken');
+    function csrfSafeMethod(method) {
+        // these HTTP methods do not require CSRF protection
+        return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+    }
+    $.ajaxSetup({
+        beforeSend: function (xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+        }
+    });
+</script> {% endblock %}

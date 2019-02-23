@@ -1,0 +1,9 @@
+Sua conta foi criada com sucesso e precisamos apenas que você confirme seu endereço de email.
+Favor ignorar este email se você não possui uma conta conosco. 
+Para confirmar seu email clique no link abaixo.
+
+{{ activate_url }}
+
+Agradecemos sua atenção,
+
+Equipe Doejá.

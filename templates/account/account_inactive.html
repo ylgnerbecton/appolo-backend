@@ -1,0 +1,31 @@
+{% extends 'account/base.html' %} 
+
+{% block content %}
+<div class="card card-border-color card-border-color-primary">
+    <div class="card-header">
+        <img src="/static/custom/img/logomarca.png" alt="logo" width="130" height="90" class="logo-img">
+        <span class="splash-description">Conta inativa!</span>
+    </div>
+    <div class="card-body">
+
+        <div class="splash-description">
+                <strong>Está conta ainda não foi ativada.</strong>
+        </div>
+
+        <div class="input-group">
+            <strong>Atenção! Para ativar sua conta confirme o SMS enviado durante seu cadastro.</strong>
+        </div>
+
+        <div class="form-group row login-submit">
+                <div class="col-12">
+                    <a class="btn btn-secondary btn-xl" href="{% url 'account_login' %}">Voltar para o login</a>
+                </div>
+            </div>
+    </div>
+</div>
+
+{% endblock %} 
+
+{% block javascript %} 
+
+{% endblock %}
