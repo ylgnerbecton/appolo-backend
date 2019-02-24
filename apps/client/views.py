@@ -12,6 +12,36 @@ from .forms import *
 from .models import *
 from datetime import datetime, timedelta
 
+from apps.pdf.pdf_reader import read_pdf
+
+
+
+class PDFToText(View):
+    template_name = "usuario/list.html"
+
+    def get(self, request):
+        arquivo = Arquivos.objects.get(pk=1)
+        doc = str(arquivo.documento)
+        doct = 'media/' + doc
+        print(doct)
+        string_pdf = read_pdf(doct)
+        
+        print(string_pdf)
+
+        # pdfFileObj = open('media/Smart_Cities_A_Survey_on_Data_Management.pdf', 'rb') 
+        # pdfReader = PyPDF2.PdfFileReader(pdfFileObj) 
+        # pageObj = pdfReader.getPage(0) 
+        # string_pdf = pageObj.extractText()
+        # print(string_pdf)
+        # pdfFileObj.close()
+
+        arquivo.texto = string_pdf
+        arquivo.save(update_fields=["texto"]) 
+
+        context = {'arquivo': arquivo}
+        return render(request, self.template_name, context)
+
+
 
 """
 USUARIO VIEW
@@ -79,3 +109,11 @@ class UsuarioDelete(View):
     def get(self, request, pk):
         Usuario.objects.get(pk=pk).delete()
         return redirect(reverse("usuario-list"))
+
+class ProcessoList(View):
+    template_name = "processo/list.html"
+
+    def get(self, request):
+        usuario = Processos.objects.all()
+        context = {'processo': processo}
+        return render(request, self.template_name, context)

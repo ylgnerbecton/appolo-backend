@@ -33,7 +33,8 @@ class Usuario(BestPraticesModel):
 class Arquivos(BestPraticesModel):
     descricao = models.CharField('Descrição', blank=True, null=True, max_length=200)
     documento = models.FileField('Documento', blank=True, null=True)
-    
+    texto = models.TextField(blank=True, null=True)
+
     class Meta:
         verbose_name = "Arquivos"
     

@@ -1,0 +1,96 @@
+{% extends 'dashboard/base.html' %} 
+{% load staticfiles %} 
+
+{% block css %}
+<!-- third party css -->
+<link href="/static/dashboard/assets/css/vendor/dataTables.bootstrap4.css" rel="stylesheet" type="text/css">
+<link href="/static/dashboard/assets/css/vendor/responsive.bootstrap4.css" rel="stylesheet" type="text/css">
+<link href="/static/dashboard/assets/css/vendor/buttons.bootstrap4.css" rel="stylesheet" type="text/css">
+<link href="/static/dashboard/assets/css/vendor/select.bootstrap4.css" rel="stylesheet" type="text/css">
+<!-- third party css end -->
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- start page title -->
+    <div class="row">
+        <div class="col-12">
+            <div class="page-title-box">
+                <div class="page-title-right">
+                    <ol class="breadcrumb m-0">
+                        <li class="breadcrumb-item"><a href="javascript: void(0);">Appolo</a></li>
+                        <li class="breadcrumb-item active">Tebela de processos</li>
+                    </ol>
+                </div>
+                <h4 class="page-title">Tebela de processos</h4>
+            </div>
+        </div>
+    </div>     
+    <!-- end page title --> 
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="header-title">Lista de processoss
+                        <a class="btn btn-primary" href="{% url 'usuario-create' %}" style="float: right;">Novo</a>
+                    </h4>
+                    <table id="basic-datatable" class="table dt-responsive nowrap" width="100%">
+                        <thead>
+                            <tr>
+                                <th>Numero do Processo</th>
+                                <th>Titulo</th>
+                                <th>Ato</th>
+                                <th>Ação</th>
+                                <th>Data da Publicacao</th>
+                                <th>Autor</th>
+                                <th>Réu</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for usuario in usuario %}
+                            <tr>
+                                <td>{{usuario.nome_completo}}</td>
+                                <td>{{usuario.cpf}}</td>
+                                <td>{{usuario.email}}</td>
+                                <td>{{usuario.telefone}}</td>
+                                <td>
+                                    <a class="btn btn-success" href="{% url 'usuario-edit' usuario.pk %}">Editar
+                                    </a>
+                                    <a class="btn btn-danger" href="{% url 'usuario-delete' usuario.pk %}">Apagar
+                                    </a>
+                                </td>                      
+                            </tr>
+                            {% empty %}
+                                <tr>
+                                    <td rowspan="4">Nenhum item encontrado!</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+
+                </div> <!-- end card body-->
+            </div> <!-- end card -->
+        </div><!-- end col-->
+    </div>
+</div>
+{% endblock %}
+
+{% block javascript %}
+<!-- third party js -->
+<script src="/static/dashboard/assets/js/vendor/jquery.dataTables.js"></script>
+<script src="/static/dashboard/assets/js/vendor/dataTables.bootstrap4.js"></script>
+<script src="/static/dashboard/assets/js/vendor/dataTables.responsive.min.js"></script>
+<script src="/static/dashboard/assets/js/vendor/responsive.bootstrap4.min.js"></script>
+<script src="/static/dashboard/assets/js/vendor/dataTables.buttons.min.js"></script>
+<script src="/static/dashboard/assets/js/vendor/buttons.bootstrap4.min.js"></script>
+<script src="/static/dashboard/assets/js/vendor/buttons.html5.min.js"></script>
+<script src="/static/dashboard/assets/js/vendor/buttons.flash.min.js"></script>
+<script src="/static/dashboard/assets/js/vendor/buttons.print.min.js"></script>
+<script src="/static/dashboard/assets/js/vendor/dataTables.keyTable.min.js"></script>
+<script src="/static/dashboard/assets/js/vendor/dataTables.select.min.js"></script>
+<!-- third party js ends -->
+
+<!-- demo app -->
+<script src="/static/dashboard/assets/js/pages/demo.datatable-init.js"></script>
+<!-- end demo js-->
+{% endblock %}
