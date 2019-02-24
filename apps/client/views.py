@@ -185,7 +185,7 @@ class Calendario(View):
     template_name = "calendario/calendario.html"
 
     def get(self, request):
-        usuario = get_user(self)
+        usuario = Usuario.objects.get(user__pk=request.user.pk)
         calendario = Processo.objects.filter(usuario=usuario)
         context = {'calendario': calendario}
         return render(request, self.template_name, context)
