@@ -42,6 +42,17 @@ class Arquivos(BestPraticesModel):
         return '{}'.format(self.descricao)
 
 
+class Ato(BestPraticesModel):
+    descricao = models.CharField('Descrição', blank=True, null=True, max_length=200)
+    texto = models.TextField(blank=True, null=True)
+
+    class Meta:
+        verbose_name = "Ato"
+    
+    def __str__(self):
+        return '{}'.format(self.descricao)
+
+
 class Processo(BestPraticesModel):
     numero_processo = models.CharField(max_length=254, blank=True, null=True)
     titulo = models.CharField(max_length=254, blank=True, null=True)

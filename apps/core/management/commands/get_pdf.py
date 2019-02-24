@@ -3,8 +3,6 @@ import time
 from subprocess import call
 from django.core.management.base import BaseCommand
 from apps.crawlers.crawler_pdf import CrawlerPDF
-# from vsales.apps.exportation.models import ExportationBerkley
-# from vsales.apps.utils.consts import PENDING
 
 
 class Command(BaseCommand):
@@ -14,15 +12,20 @@ class Command(BaseCommand):
         call(["pkill", "-f", "firefox"])
         time.sleep(3)
 
-        # exportation_pending = ExportationBerkley.objects.filter(status=PENDING)
-        # self.stdout.write(self.style.SUCCESS('%s: %d proposals has found' % (time.strftime('%d/%m/%Y %H:%M:%S'),
-        #                                                                      exportation_pending.count())))
+        # crawler = CrawlerPDF()
+        # # crawler.send_proposal(request=self.proposal.request, proposal=self.proposal)
+        # url = crawler.driver.current_url
 
-        # if exportation_pending:
-        crawler = CrawlerPDF()
-        # for exportation in exportation_pending:
-        #     exportation.send(crawler)
+        # # exportation_pending = ExportationBerkley.objects.filter(status=PENDING)
+        # # self.stdout.write(self.style.SUCCESS('%s: %d proposals has found' % (time.strftime('%d/%m/%Y %H:%M:%S'),
+        # #                                                                      exportation_pending.count())))
 
-        # crawler.driver.close()
-        crawler.driver.quit()
+        # # if exportation_pending:
+        
+        
+        # # for exportation in exportation_pending:
+        # #     exportation.send(crawler)
+
+        # # crawler.driver.close()
+        # # crawler.driver.quit()
 

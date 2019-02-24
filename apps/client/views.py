@@ -11,37 +11,13 @@ from apps.core.models import State, City, Neighborhood, Place, Address
 from .forms import *
 from .models import *
 from datetime import datetime, timedelta
+from time import gmtime, strftime
+
+from pathlib import Path
+import requests
+import random
 
 from apps.pdf.pdf_reader import read_pdf
-
-
-
-class PDFToText(View):
-    template_name = "usuario/list.html"
-
-    def get(self, request):
-        arquivo = Arquivos.objects.get(pk=1)
-        doc = str(arquivo.documento)
-        doct = 'media/' + doc
-        print(doct)
-        string_pdf = read_pdf(doct)
-        
-        print(string_pdf)
-
-        # pdfFileObj = open('media/Smart_Cities_A_Survey_on_Data_Management.pdf', 'rb') 
-        # pdfReader = PyPDF2.PdfFileReader(pdfFileObj) 
-        # pageObj = pdfReader.getPage(0) 
-        # string_pdf = pageObj.extractText()
-        # print(string_pdf)
-        # pdfFileObj.close()
-
-        arquivo.texto = string_pdf
-        arquivo.save(update_fields=["texto"]) 
-
-        context = {'arquivo': arquivo}
-        return render(request, self.template_name, context)
-
-
 
 """
 USUARIO VIEW
@@ -110,6 +86,7 @@ class UsuarioDelete(View):
         Usuario.objects.get(pk=pk).delete()
         return redirect(reverse("usuario-list"))
 
+
 class ProcessoList(View):
     template_name = "processo/list.html"
 
@@ -117,3 +94,100 @@ class ProcessoList(View):
         processo = Processo.objects.all()
         context = {'processo': processo}
         return render(request, self.template_name, context)
+
+def get_user(request):
+    usuario = Usuario.objects.get(user__pk=request.user.pk)
+    return usuario
+
+
+# s = "123123STRINGabcabc"
+
+def find_between(s, first, last ):
+    try:
+        start = s.index( first ) + len( first )
+        end = s.index( last, start )
+        return s[start:end]
+    except ValueError:
+        return ""
+
+def find_between_r(s, first, last ):
+    try:
+        start = s.rindex(first) + len(first)
+        end = s.rindex(last, start)
+        start_end = s[start:end]
+        return start_end
+    except ValueError:
+        return ""
+
+
+import re
+
+def download_pdf_day(self):
+    number = random.randrange(0, 9999999)
+    data_atual = strftime("%d/%m/%Y", gmtime())
+    result = 'diário oficial ' + data_atual
+
+    # filename = Path('media/' + 'diario_oficial_' + str(number) + '.pdf')
+    # url = 'http://www.tjpe.jus.br/dje/DownloadServlet?dj=DJ39_2019-ASSINADO.PDF&amp;statusDoDiario=ASSINADO'
+    # response = requests.get(url, verify=False)
+    # filename.write_bytes(response.content)
+
+    # arq = Arquivos()
+    # arq.descricao = result
+    # arq.documento = filename.name
+
+    # doc = str(arq.documento)
+    # doct = 'media/' + doc
+    # string_pdf = read_pdf(doct)
+
+    # arq.texto = string_pdf
+    # arq.save()
+
+    arq = Arquivos.objects.get(id=1)
+
+    inicio = 'Poder Judiciário'
+
+    fim_or_1 = 'Juiz de Direito'
+    fim_or_2 = 'Juiza de Direito'
+    fim_or_3 = 'Juiz(a) de Direito'
+    fim_or_4 = 'Juíza(a) de Direito'
+    
+    # palavra_chave['Processo N°:']
+    # palavra_chave['Natureza da Ação:']
+    # palavra_chave['Réu:']
+    # palavra_chave['Réu(s):']
+    # palavra_chave['Advogado:']
+    # palavra_chave['Autor:']
+    # palavra_chave['Prazo']
+
+    teste = arq.texto
+
+    # if fim_or_1.find(arq.texto):
+    #     print(fim_or_1)
+
+    # if fim_or_1.find(arq.texto):
+    #     print(fim_or_1)
+    # if fim_or_1.find(arq.texto):
+    #     print(fim_or_1)
+    # if fim_or_1.find(arq.texto):
+    #     print(fim_or_1)
+
+    # fim = fim_or_1 r fim_or_2 or fim_or_3 or fim_or_4
+
+    texto = find_between_r(arq.texto, inicio, fim_or_1)
+
+    ato = Ato()
+    ato.texto = texto
+    ato.descricao = "SENTENÇA"
+    ato.save()
+
+    # usuario = get_user(self)
+    
+    # processo = Processo()
+
+    return result
+
+
+
+
+

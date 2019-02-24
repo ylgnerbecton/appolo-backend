@@ -43,3 +43,5 @@ Werkzeug==0.14.1
 pdfminer.six==20181108
 pycryptodome==3.7.3
 sortedcontainers==2.1.0
+selenium==3.141.0
+PyPDF2==1.26.0

@@ -14,8 +14,5 @@ urlpatterns = [
     path('usuario/edit/<int:pk>/', login_required(views.UsuarioEdit.as_view()), name='usuario-edit'),
     path('usuario/delete/<int:pk>/', login_required(views.UsuarioDelete.as_view()), name='usuario-delete'),
     path('processo/list/', login_required(views.ProcessoList.as_view()), name='processo-list'),
-    path('pdf_to_text/', login_required(views.PDFToText.as_view()), name='pdf-text'),
-
-
-    
+    path('dawnload_pdf/', login_required(views.download_pdf_day), name='dawnload_pdf'),
 ]
