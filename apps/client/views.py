@@ -5,7 +5,7 @@ from django.urls import reverse
 from django.views.generic import View, DetailView
 from django.contrib.auth.models import User
 from django.db.models import Q
-
+from apps.calendar.create_event import agendar
 from apps.message_core.tasks import generate_number
 from apps.core.models import State, City, Neighborhood, Place, Address
 from .forms import *
@@ -97,7 +97,7 @@ class ProcessoList(View):
         return render(request, self.template_name, context)
 
 def get_user(request):
-    usuario = Usuario.objects.get(user__pk=request.user.pk)
+    usuario = Usuario.objects.get(user__pk=1)
     return usuario
 
 
@@ -147,7 +147,7 @@ def download_pdf_day(self):
 
     patt = 'Processo N'
     txts = re.split(patt+patt, teste)
-    # add = 'º:'
+    # add = 'º 0000:'
     usuario = get_user(self)
 
     for txt in txts:
@@ -157,8 +157,10 @@ def download_pdf_day(self):
         ato.save()
 
         part_text = ato.texto
-        part = re.search('o 0000(.+?)', part_text)
-        print(part.value)
+        i = part_text.find('Processo N°:')    
+        print(i)
+        # part = re.search('o 0000(.+?)', part_text)
+#        print(part)
 
         processo = Processo()
         processo.usuario = usuario
@@ -172,8 +174,10 @@ def download_pdf_day(self):
     # palavra_chave['Advogado:']
     # palavra_chave['Autor:']
     # palavra_chave['Prazo']
-
-    # agendar(usuario.email, descricao, location, titulo, start,end)
+    processo = Processo.objects.get(id=1)
+    print(processo)
+    
+    agendar(usuario.email, processo.texto,processo.titulo,datetime.now(),processo.data_publicacao_ato)
 
     teste = 'success'
     return teste

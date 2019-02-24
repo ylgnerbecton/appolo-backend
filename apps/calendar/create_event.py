@@ -9,19 +9,19 @@ from datetime import timedelta
 #DATE FORMAT : 2019-02-23 20:53:32.846516
 
 
-def agendar(email,descricao,location="Não especificado",titulo,start,end):
+def agendar(email,descricao,titulo,start,end):
     SCOPES = 'https://www.googleapis.com/auth/calendar'
-    store = file.Storage('token.json')
+    store = file.Storage('./apps/calendar/token.json')
     creds = store.get()
     if not creds or creds.invalid:
-        flow = client.flow_from_clientsecrets('credentials.json', SCOPES)
+        flow = client.flow_from_clientsecrets('./apps/calendar/credentials.json', SCOPES)
         creds = tools.run_flow(flow, store)
     service = build('calendar', 'v3', http=creds.authorize(Http()))
     end = end.isoformat()
     start = start.isoformat()
     event_body = {
       'summary': titulo,
-	    'location': location,
+	    'location':"Não especificado",
 	    'description': descricao,
 	    'start': {
 	      'dateTime': start,
