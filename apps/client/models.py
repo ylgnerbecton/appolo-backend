@@ -30,17 +30,27 @@ class Usuario(BestPraticesModel):
         return '{}'.format(self.nome_completo)
 
 
+class Arquivos(BestPraticesModel):
+    descricao = models.CharField('Descrição', blank=True, null=True, max_length=200)
+    documento = models.FileField('Documento', blank=True, null=True)
+    
+    class Meta:
+        verbose_name = "Arquivos"
+    
+    def __str__(self):
+        return '{}'.format(self.descricao)
+
+
 class Processo(BestPraticesModel):
-    titulo = models.CharField(max_length=254, blank=True, null=True)
-    texto = models.TextField(blank=True, null=True)
     numero_processo = models.CharField(max_length=254, blank=True, null=True)
+    titulo = models.CharField(max_length=254, blank=True, null=True)
     ato = models.CharField(max_length=254, blank=True, null=True)
     tipo_acao = models.CharField(max_length=254, blank=True, null=True)
     data_publicacao_ato = models.DateTimeField(blank=True, null=True)
     autor = models.CharField(max_length=254, blank=True, null=True)
     reu = models.CharField(max_length=254, blank=True, null=True)
     advogado = models.CharField(max_length=254, blank=True, null=True)
-
+    texto = models.TextField(blank=True, null=True)
 
     class Meta:
         verbose_name = "Processo"
