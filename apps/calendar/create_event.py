@@ -9,7 +9,7 @@ from datetime import timedelta
 #DATE FORMAT : 2019-02-23 20:53:32.846516
 
 
-def agendar(email,descricao,location,titulo,start,end):
+def agendar(email,descricao,location="Não especificado",titulo,start,end):
     SCOPES = 'https://www.googleapis.com/auth/calendar'
     store = file.Storage('token.json')
     creds = store.get()
