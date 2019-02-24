@@ -114,6 +114,6 @@ class ProcessoList(View):
     template_name = "processo/list.html"
 
     def get(self, request):
-        usuario = Processos.objects.all()
+        processo = Processo.objects.all()
         context = {'processo': processo}
         return render(request, self.template_name, context)

@@ -32,31 +32,36 @@
             <div class="card">
                 <div class="card-body">
                     <h4 class="header-title">Lista de processoss
-                        <a class="btn btn-primary" href="{% url 'usuario-create' %}" style="float: right;">Novo</a>
                     </h4>
                     <table id="basic-datatable" class="table dt-responsive nowrap" width="100%">
                         <thead>
                             <tr>
                                 <th>Numero do Processo</th>
+                                <th>Advogado</th>
                                 <th>Titulo</th>
                                 <th>Ato</th>
                                 <th>Ação</th>
                                 <th>Data da Publicacao</th>
                                 <th>Autor</th>
                                 <th>Réu</th>
+                                <th>Opções</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {% for usuario in usuario %}
+                            {% for processo in processo %}
                             <tr>
-                                <td>{{usuario.nome_completo}}</td>
-                                <td>{{usuario.cpf}}</td>
-                                <td>{{usuario.email}}</td>
-                                <td>{{usuario.telefone}}</td>
+                                <td>{{processo.numero_processo}}</td>
+                                <td>{{processo.advogado}}</td>
+                                <td>{{processo.titulo}}</td>
+                                <td>{{processo.ato}}</td>
+                                <td>{{processo.tipo_acao}}</td>
+                                <td>{{processo.data_publicacao_ato}}</td>
+                                <td>{{processo.autor}}</td>
+                                <td>{{processo.reu}}</td>
                                 <td>
-                                    <a class="btn btn-success" href="{% url 'usuario-edit' usuario.pk %}">Editar
+                                    <a class="btn btn-success" href="">Editar
                                     </a>
-                                    <a class="btn btn-danger" href="{% url 'usuario-delete' usuario.pk %}">Apagar
+                                    <a class="btn btn-danger" href="">Apagar
                                     </a>
                                 </td>                      
                             </tr>
