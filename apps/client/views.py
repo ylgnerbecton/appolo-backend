@@ -97,7 +97,7 @@ class ProcessoList(View):
         return render(request, self.template_name, context)
 
 def get_user(request):
-    usuario = Usuario.objects.get(user__pk=1)
+    usuario = Usuario.objects.get(user__pk=request.user.pk)
     return usuario
 
 
@@ -125,29 +125,28 @@ def download_pdf_day(self):
     data_atual = strftime("%d/%m/%Y", gmtime())
     result = 'diário oficial ' + data_atual
 
-    # filename = Path('media/' + 'diario_oficial_' + str(number) + '.pdf')
-    # url = 'http://www.tjpe.jus.br/dje/DownloadServlet?dj=DJ39_2019-ASSINADO.PDF&amp;statusDoDiario=ASSINADO'
-    # response = requests.get(url, verify=False)
-    # filename.write_bytes(response.content)
+    filename = Path('media/' + 'diario_oficial_' + str(number) + '.pdf')
+    url = 'http://www.tjpe.jus.br/dje/DownloadServlet?dj=DJ39_2019-ASSINADO.PDF&amp;statusDoDiario=ASSINADO'
+    response = requests.get(url, verify=False)
+    filename.write_bytes(response.content)
 
-    # arq = Arquivos()
-    # arq.descricao = result
-    # arq.documento = filename.name
+    arq = Arquivos()
+    arq.descricao = result
+    arq.documento = filename.name
 
-    # doc = str(arq.documento)
-    # doct = 'media/' + doc
-    # string_pdf = read_pdf(doct)
+    doc = str(arq.documento)
+    doct = 'media/' + doc
+    string_pdf = read_pdf(doct)
 
-    # arq.texto = string_pdf
-    # arq.save()
+    arq.texto = string_pdf
+    arq.save()
 
     arq = Arquivos.objects.get(id=1)
     
     teste = arq.texto
 
     patt = 'Processo N'
-    txts = re.split(patt+patt, teste)
-    # add = 'º 0000:'
+    txts = re.split(patt, teste)
     usuario = get_user(self)
 
     for txt in txts:
@@ -158,14 +157,13 @@ def download_pdf_day(self):
 
         part_text = ato.texto
         i = part_text.find('Processo N°:')    
-        print(i)
-        # part = re.search('o 0000(.+?)', part_text)
-#        print(part)
 
         processo = Processo()
         processo.usuario = usuario
         processo.texto = part_text
         processo.save()
+
+        agendar(usuario.email, processo.texto, processo.titulo, datetime.now(), processo.data_publicacao_ato)
 
     # palavra_chave['Processo N°:']
     # palavra_chave['Natureza da Ação:']
@@ -174,15 +172,21 @@ def download_pdf_day(self):
     # palavra_chave['Advogado:']
     # palavra_chave['Autor:']
     # palavra_chave['Prazo']
-    processo = Processo.objects.get(id=1)
-    print(processo)
-    
-    agendar(usuario.email, processo.texto,processo.titulo,datetime.now(),processo.data_publicacao_ato)
 
-    teste = 'success'
-    return teste
+    # processo = Processo.objects.get(id=1)
+    # print(processo)
+    # part = re.search('o 0000(.+?)', part_text)
+    # print(part)
 
-
+    return result
 
 
+class Calendario(View):
+    template_name = "calendario/calendario.html"
+
+    def get(self, request):
+        usuario = get_user(self)
+        calendario = Processo.objects.filter(usuario=usuario)
+        context = {'calendario': calendario}
+        return render(request, self.template_name, context)
 
