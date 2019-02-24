@@ -16,6 +16,7 @@ from time import gmtime, strftime
 from pathlib import Path
 import requests
 import random
+import re
 
 from apps.pdf.pdf_reader import read_pdf
 
@@ -100,8 +101,6 @@ def get_user(request):
     return usuario
 
 
-# s = "123123STRINGabcabc"
-
 def find_between(s, first, last ):
     try:
         start = s.index( first ) + len( first )
@@ -109,6 +108,7 @@ def find_between(s, first, last ):
         return s[start:end]
     except ValueError:
         return ""
+
 
 def find_between_r(s, first, last ):
     try:
@@ -119,9 +119,7 @@ def find_between_r(s, first, last ):
     except ValueError:
         return ""
 
-
-import re
-
+    
 def download_pdf_day(self):
     number = random.randrange(0, 9999999)
     data_atual = strftime("%d/%m/%Y", gmtime())
@@ -144,14 +142,29 @@ def download_pdf_day(self):
     # arq.save()
 
     arq = Arquivos.objects.get(id=1)
-
-    inicio = 'Poder Judiciário'
-
-    fim_or_1 = 'Juiz de Direito'
-    fim_or_2 = 'Juiza de Direito'
-    fim_or_3 = 'Juiz(a) de Direito'
-    fim_or_4 = 'Juíza(a) de Direito'
     
+    teste = arq.texto
+
+    patt = 'Processo N'
+    txts = re.split(patt+patt, teste)
+    # add = 'º:'
+    usuario = get_user(self)
+
+    for txt in txts:
+        ato = Ato()
+        ato.texto = txt
+        ato.descricao = "SENTENÇA"
+        ato.save()
+
+        part_text = ato.texto
+        part = re.search('o 0000(.+?)', part_text)
+        print(part.value)
+
+        processo = Processo()
+        processo.usuario = usuario
+        processo.texto = part_text
+        processo.save()
+
     # palavra_chave['Processo N°:']
     # palavra_chave['Natureza da Ação:']
     # palavra_chave['Réu:']
@@ -160,32 +173,10 @@ def download_pdf_day(self):
     # palavra_chave['Autor:']
     # palavra_chave['Prazo']
 
-    teste = arq.texto
+    # agendar(usuario.email, descricao, location, titulo, start,end)
 
-    # if fim_or_1.find(arq.texto):
-    #     print(fim_or_1)
-
-    # if fim_or_1.find(arq.texto):
-    #     print(fim_or_1)
-    # if fim_or_1.find(arq.texto):
-    #     print(fim_or_1)
-    # if fim_or_1.find(arq.texto):
-    #     print(fim_or_1)
-
-    # fim = fim_or_1 r fim_or_2 or fim_or_3 or fim_or_4
-
-    texto = find_between_r(arq.texto, inicio, fim_or_1)
-
-    ato = Ato()
-    ato.texto = texto
-    ato.descricao = "SENTENÇA"
-    ato.save()
-
-    # usuario = get_user(self)
-    
-    # processo = Processo()
-
-    return result
+    teste = 'success'
+    return teste
 
 
 

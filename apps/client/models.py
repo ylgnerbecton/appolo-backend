@@ -54,6 +54,7 @@ class Ato(BestPraticesModel):
 
 
 class Processo(BestPraticesModel):
+    usuario = models.ForeignKey(Usuario, blank=True, null=True, on_delete=models.DO_NOTHING)
     numero_processo = models.CharField(max_length=254, blank=True, null=True)
     titulo = models.CharField(max_length=254, blank=True, null=True)
     ato = models.CharField(max_length=254, blank=True, null=True)
