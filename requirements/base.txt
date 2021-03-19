@@ -13,7 +13,7 @@ django-oauth-toolkit==1.2.0
 django-rest-auth==0.9.3
 django-rest-swagger==2.2.0
 django-simple-history==2.1.1
-djangorestframework==3.8.2
+djangorestframework==3.11.2
 djangorestframework-filters==0.10.2
 certifi==2018.4.16
 chardet==3.0.4
